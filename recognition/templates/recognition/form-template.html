@@ -1,0 +1,24 @@
+{% if messages %}
+<ul>
+  {% for message in messages %}
+     <li>{{ message }}</li>
+  {% endfor %}
+</ul>
+{% endif %}
+{% load widget_tweaks %}
+{% csrf_token %}
+{% for field in form %}
+<div class="row">
+  <div class="col-sm-10 offset-sm-1" >
+    <div class="form-group">
+      <div class="row">
+        <div class="col-sm-10 offset-sm-2 text-center pagination-centered" >
+          <span class="text-denger small">{{field.errors}}</span>
+        </div>
+        <label class="control-label col-sm-4">{{field.label_tag}}</label>
+        <div class="col-sm-8">{% render_field field class="form-control" %}</div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endfor %}

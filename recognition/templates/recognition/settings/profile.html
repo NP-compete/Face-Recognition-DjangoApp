@@ -1,0 +1,117 @@
+{% extends 'recognition/base.html' %}
+
+
+{% block head %}
+{% endblock %}
+
+
+{% block title %}{% block pagetitle %}Settings{% endblock %}{% endblock %}
+
+{% block body %}
+  <div class="row">
+    <div class="col-md-8">
+      <form action="{% url 'recognition:edit-profile' %}" method="post" enctype="multipart/form-data">
+        <div class="card">
+          <div class="card-header">
+            <h5 class="title">Edit Profile</h5>
+          </div>
+          <div class="card-body">
+            {% if messages %}
+            <ul>
+              {% for message in messages %}
+                 <li>{{ message }}</li>
+              {% endfor %}
+            </ul>
+            {% endif %}
+            
+            {% csrf_token %}
+            {% load widget_tweaks %}
+
+            {% for hidden_field in user_form.hidden_fields %}
+                {{ hidden_field }}
+            {% endfor %}
+
+            {% for field in user_form.visible_fields %}
+            <div class="row">
+              <div class="col-sm-10 offset-sm-1" >
+                <div class="form-group">
+                  <div class="row">
+                    <div class="col-sm-10 offset-sm-2 text-center pagination-centered" >
+                      <span class="text-denger small">{{field.errors}}</span>
+                    </div>
+                    <label class="control-label col-sm-4">{{field.label_tag}}</label>
+                    <div class="col-sm-8">{% render_field field class="form-control" %}</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            {% endfor %}
+            <br/>
+            {% for hidden_field in profile_form.hidden_fields %}
+                {{ hidden_field }}
+            {% endfor %}
+            {% for field in profile_form.visible_fields %}
+            <div class="row">
+              <div class="col-sm-10 offset-sm-1" >
+                <div class="form-group">
+                  <div class="row">
+                    <div class="col-sm-10 offset-sm-2 text-center pagination-centered" >
+                      <span class="text-denger small">{{field.errors}}</span>
+                    </div>
+                    <label class="control-label col-sm-4">{{field.label_tag}}</label>
+                    <div class="col-sm-8" style="color: wheat;">{% render_field field class="form-control" %}</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+          <div class="card-footer">
+            <button type="submit" class="btn btn-fill btn-primary">Save</button>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="col-md-4">
+      <div class="card  card-user">
+        <div class="card-body ">
+          <p class="card-text">
+            <div class="author">
+              <div class="block block-one"></div>
+              <div class="block block-two"></div>
+              <div class="block block-three"></div>
+              <div class="block block-four"></div>
+              <a href="#">
+                {% if user.profile.photo %}
+                <img class="avatar" src="{{ user.profile.photo.url }}" alt="...">
+                {% else %}
+                <img class="avatar" src="" alt="...">
+                {% endif %}
+                <h5 class="title">{{ user.profile.firstname }} {{ user.profile.lastname }}</h5>
+              </a>
+              <p class="description">
+                {{ user.profile.organization}}
+              </p>
+            </div>
+          </p>
+          <p class="card-description">
+            {{ user.profile.bio }}
+          </p>
+        </div>
+        <div class="card-footer ">
+          <div class="button-container">
+            <button href="#" class="btn btn-icon btn-round btn-facebook">
+              <i class="fab fa-facebook"></i>
+            </button>
+            <button href="#" class="btn btn-icon btn-round btn-twitter">
+              <i class="fab fa-twitter"></i>
+            </button>
+            <button href="#" class="btn btn-icon btn-round btn-google">
+              <i class="fab fa-google-plus"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

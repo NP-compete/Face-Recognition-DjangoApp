@@ -1,0 +1,35 @@
+{% extends 'recognition/base.html'%}
+{% block body %}
+
+
+<div class="col-md-6">
+  <div class="card">
+    <div class="card-header">
+      <h5 class="title">Start Blogging</h5>
+    </div>
+    <div class="card-body">
+      <form>
+        <div class="row">
+          <div class="col-md-11 pr-md-1">
+            <div class="form-group">
+              <label>Topic</label>
+              <input type="text" class="form-control" placeholder="topic">
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-11">
+            <div class="form-group">
+              <label>Description</label>
+              <textarea rows="10" style="resize:vertical; max-height:300px; border:solid 1px #2b3553" cols="80" class="form-control" placeholder="Here can be your description">Description</textarea>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="card-footer">
+      <button type="submit" class="btn btn-fill btn-primary">Post</button>
+    </div>
+  </div>
+</div>
+{% endblock %}

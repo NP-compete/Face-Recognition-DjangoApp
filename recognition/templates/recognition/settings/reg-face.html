@@ -1,0 +1,174 @@
+{% extends 'recognition/base.html'%}
+{% block head %}
+<style type="text/css">
+	#container {
+	    margin: 0px auto;
+	    width: 500px;
+	    height: 375px;
+	    border: 10px #333 solid;
+	}
+	.canvasFrame {
+	    width: 80%;
+	    max-height: 240px;
+	    background-color: #666;
+	    border: 10px #333 solid;
+	}
+	#videoElement{
+		width: 100%;
+		
+	}
+	.hidden{
+		display: none;
+	}
+	#canvasOutput{
+		margin: auto;
+	}
+	
+</style>
+
+{% endblock %}
+
+{% block title %}{% block pagetitle %}Settings{% endblock %}{% endblock %}
+
+{% block body %}
+<div class="row">
+	<div class="col-md-5">
+		<div class="row">
+			<div class="card">
+			    <div class="card-header text-center" style="padding: 20px;">
+					<h5 class="title">Register</h5>
+					<div class="canvasFrame" style="width:100%; text-align: center; overflow: hidden;">
+						<video autoplay="true" id="videoElement"></video>
+						<canvas id="canvasOutput"></canvas>
+					</div>
+			    </div>
+			    <form class="form-horizontal" action="" method="post" enctype="multipart/form-data">
+				    <div class="card-body" style="min-height: 100px;">
+				    	<div class="row">
+				    		<div class="col-md-10 offset-md-1" >
+				    			<div style="margin: 0 auto; width: 100%; text-align: center;">
+				    				<label style="font-size: 15px; font-weight: 600; color: white; font-family: monospace;" id="lblStatus"></label>
+				    			</div>
+				    			<div id="trainLoader" class="hidden" style="margin: 0 auto; width: 100%; text-align: center;">
+				    				<div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
+				    			</div>
+				    			<div id="videoFrameContainer" style="margin:0 auto; width: 100%; text-align:center;"></div>
+				    		</div>
+				    	</div>
+						{% include 'recognition/form-template.html' %}
+				    </div>
+				    <div class="card-footer col-md-10 offset-md-1">
+				    	<div class="row">
+				    		<div class="col-md-4" style="text-align: center;">
+				    			<button id="btnTakeSnap" class="btn btn-fill btn-block btn-info" style="padding-left: 0px; padding-right: 0px; ">Capture</button>
+				    		</div>
+				    		<div class="col-md-4" style="text-align: center;">
+				    			<button id="btnReset" class="btn btn-fill btn-block btn-danger" style="padding-left: 0px; padding-right: 0px; ">Reset</button>
+				    		</div>
+				    		<div class="col-md-4" style="text-align: center;">
+				      			<button id="btnTrain" class="btn btn-fill btn-block btn-primary" style="padding-left: 0px; padding-right: 0px; ">Train</button>
+				      		</div>
+				    	</div>
+				    </div>
+			    </form>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}
+
+
+{% block footerScript %}
+{% load staticfiles%}
+<script type="text/javascript">
+	var video = document.querySelector("#videoElement");
+	if (navigator.mediaDevices.getUserMedia) {       
+	    navigator.mediaDevices.getUserMedia({video: true})
+	  .then(function(stream) {
+	    video.srcObject = stream;
+	  })
+	  .catch(function(err0r) {
+	    console.log("Something went wrong!");
+	  });
+	}
+</script>
+<script src="{% static 'recognition' %}/js/opencv.js" type="text/javascript"></script>
+<script src="{% static 'recognition' %}/js/utils.js"  type="text/javascript"></script>
+<script src="{% static 'recognition' %}/js/facedetect.js" onload="opencvIsReady()" type="text/javascript"></script>
+<script>
+	document.querySelector("#btnTakeSnap").addEventListener("click", function(event){
+	    event.preventDefault()
+	    captureFrame()
+	});
+	document.querySelector("#btnReset").addEventListener("click", function(event){
+	    event.preventDefault();
+	    var container = document.querySelector("#videoFrameContainer");
+	    container.innerHTML = '';
+	});
+	document.querySelector("#btnTrain").addEventListener("click", function(event){
+	    event.preventDefault();
+	    register();
+	});
+	function captureFrame() {
+		var container = document.querySelector("#videoFrameContainer");
+		if (container.childElementCount>=5|| faceDetected==false) {
+			return
+		}
+
+
+		var canvas = document.createElement('canvas');
+		var video = document.querySelector("#videoElement");
+		canvas.width = video.videoWidth;
+		canvas.height = video.videoHeight;
+		canvas.style.width=String(video.videoWidth/10)+"px";
+		canvas.style.height=String(video.videoHeight/10)+"px";
+		canvas.style.zIndex = 8;
+		canvas.style.border = "1px solid";
+		var ctx = canvas.getContext('2d');
+        ctx.drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
+        container.appendChild(canvas);
+
+	}
+
+	function register(){
+		var container = document.querySelector("#videoFrameContainer");
+		var status = document.querySelector("#lblStatus");
+		if (container.childElementCount<5) {
+			status.innerHTML="Capture 5 samples first to train"
+			return
+		}
+	
+		var train = document.querySelector("#btnTrain")
+		if (train.classList.contains("disabled")){return}
+		train.classList.add("disabled")
+
+		var loader = document.querySelector("#trainLoader");
+		var canva = container.childNodes;
+		var imgData=[]
+		canva.forEach(function(canvas){
+		    imgData.push(canvas.toDataURL());
+		});
+		container.classList.add("hidden");
+		loader.classList.remove("hidden");
+		status.innerHTML="Training"
+		status.classList.add("glow");
+		$.ajax({
+		  type: "POST",
+		  url: "{% url 'recognition:reg-face' %}",
+		  data: {
+		  	'imgs[]':imgData,
+		  	csrfmiddlewaretoken: '{{ csrf_token }}'
+		  }
+		}).done(function(response) {
+			console.log('saved'); 
+			console.log(response);
+			loader.classList.add("hidden");
+			container.classList.remove("hidden");
+			status.classList.remove("glow");
+			train.classList.remove("disabled")
+			status.innerHTML="Training complete"
+			container.innerHTML = '';
+		});
+	}
+</script>
+{% endblock%}

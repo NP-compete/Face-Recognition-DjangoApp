@@ -1,0 +1,41 @@
+{% extends 'recognition/base.html'%}
+{% block head %}
+<style type="text/css">
+	.main-panel .content {
+	    padding: 80px 30px 30px 80px;
+	    min-height: calc(100vh - 70px);
+	}
+</style>
+{% endblock %}
+
+{% block sidebar %}
+{% endblock %}
+
+{% block title %}{% block pagetitle %}Register{% endblock %}{% endblock %}
+
+{% block body %}
+<div class="row">
+	<div class="col-md-4 offset-md-4">
+		<div class="row">
+			<div class="card">
+			    <div class="card-header text-center" style="padding: 20px;">
+					<h5 class="title">Register</h5>
+			    </div>
+			    <form class="form-horizontal" action="" method="post" enctype="multipart/form-data">
+			    	{% csrf_token %}
+				    <div class="card-body">
+						{% include 'recognition/form-template.html' %}
+				    </div>
+				    <div class="card-footer col-md-4 offset-md-4">
+				      <button type="submit" class="btn btn-fill btn-primary">Register</button>
+				    </div>
+			    </form>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}
+
+
+{% block footerScript %}
+{% endblock%}
