@@ -25,4 +25,4 @@ python manage.py migrate
 ```
 python manage.py runserver
 ```
-8. Open web browser at [http://localhost:8000](http://localhost:8000])
+8. Open web browser at [http://localhost:8000](http://localhost:8000)
