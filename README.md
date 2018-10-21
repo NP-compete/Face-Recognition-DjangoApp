@@ -12,7 +12,7 @@ git clone https://github.com/NP-compete/Face-Recognition-DjangoApp
 cd Face-Recognition-DjangoApp
 ```
 3. Download the shape Predictor file from [here](https://drive.google.com/file/d/12yzYGzXu8LZz0Zi4-89Qu90WPMuyoQBX/view?usp=sharing)
-4. Put the file in DL Models folder
+4. Put the file in [DL Models](https://github.com/NP-compete/Face-Recognition-DjangoApp/tree/master/DLModels) folder
 5. Make migrations
 ```
 python manage.py makemigrations
