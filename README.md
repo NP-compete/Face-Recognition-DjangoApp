@@ -3,7 +3,7 @@
 This is a Django App which autheticates using Facial recognition
 
 **Steps to run:**
-Clone this Repo
+1. Clone this Repo
 ```
 git clone https://github.com/NP-compete/Face-Recognition-DjangoApp
 ```
