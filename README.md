@@ -1,6 +1,6 @@
 # Face-Recognition-DjangoApp
 
-This is a Django App which autheticates using Facial recognition
+This is a Django App which authenticates using Facial recognition:-
 
 **Steps to run:**
 1. Clone this Repo
