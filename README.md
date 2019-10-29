@@ -1,6 +1,6 @@
 # Face-Recognition-DjangoApp
 
-This is a Django App which autheticates using Facial recognition
+This is a Django App which authenticates using Facial recognition:-
 
 **Steps to run:**
 1. Clone this Repo
@@ -13,7 +13,7 @@ cd Face-Recognition-DjangoApp
 ```
 3. Download the shape Predictor file from [here](https://drive.google.com/file/d/12yzYGzXu8LZz0Zi4-89Qu90WPMuyoQBX/view?usp=sharing)
 4. Put the file in [DL Models](https://github.com/NP-compete/Face-Recognition-DjangoApp/tree/master/DLModels) folder
-5. Make migrations
+5. Make migration
 ```
 python manage.py makemigrations
 ```
